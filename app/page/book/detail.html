@@ -1,0 +1,345 @@
+<div class="wrapper-md row" ng-controller="BookDetailController">
+    <div class="col-sm-12">
+        <div class="row">
+            <div class="col-sm-12 col-md-6" ng-hide="editMode">
+                <div class="row m-b-sm">
+                    <div class="col-xs-9">
+                        <span class="f18">
+                            <i class="fa fa-list text-success"></i>
+                            图书详情显示
+                        </span>
+                    </div>
+                    <div class="col-xs-3">
+                        <button class="pull-right btn btn-primary f16" ng-click="editMode=!editMode" ng-show="app.user.role=='ADMIN' || app.user.role=='MANAGER'">
+                            <i class="fa fa-pencil-square-o "></i>
+                            编辑
+                        </button>
+                    </div>
+                </div>
+            </div>
+            <div class="col-sm-12 col-md-6" ng-show="editMode">
+                <div class="row m-b-sm">
+                    <div class="col-xs-9">
+                <span class="f18">
+                    <i class="fa fa-list text-success"></i>
+                    图书详情修改
+                </span>
+                    </div>
+                    <div class="col-xs-3">
+                        <button class="pull-right btn btn-success f16" ng-click="submit();editMode=!editMode">
+                            <i class="fa fa-floppy-o"></i>
+                            保存
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <!--详情-->
+    <div class="col-sm-12 col-md-6" ng-hide="editMode">
+
+        <div class="row wrapper-xs">
+            <div class="col-xs-12 bg-white wrapper-lg">
+                <div class="row wrapper-xs">
+                    <div class="col-xs-12 text-center">
+                        <img class="" ng-src="{{book.large_image}}"/>
+                    </div>
+
+                </div>
+                <div class="row wrapper-xs">
+                    <div class="col-xs-3 text-right ">
+                        <span class="bold ">
+                            图书编号
+                        </span>
+                    </div>
+                    <div class="col-xs-9 text-left">
+                        <span>
+                            {{book.no}}
+                        </span>
+                    </div>
+                </div>
+                <div class="row wrapper-xs">
+                    <div class="col-xs-3 text-right">
+                        <span class="bold">
+                            图书馆
+                        </span>
+                    </div>
+                    <div class="col-xs-9 text-left">
+                        <span>
+                            {{book.library.name}}
+                        </span>
+                    </div>
+
+                </div>
+
+                <div class="row wrapper-xs">
+                    <div class="col-xs-3 text-right">
+                        <span class="bold">
+                            书名
+                        </span>
+                    </div>
+                    <div class="col-xs-9 text-left">
+                        <span>
+                            {{book.title}}
+                        </span>
+                    </div>
+                </div>
+
+                <div class="row wrapper-xs">
+                    <div class="col-xs-3 text-right">
+                        <span class="bold">
+                            出版社
+                        </span>
+                    </div>
+                    <div class="col-xs-9 text-left">
+                        <span>
+                            {{book.publisher}}
+                        </span>
+                    </div>
+                </div>
+
+                <div class="row wrapper-xs">
+                    <div class="col-xs-3 text-right">
+                        <span class="bold">
+                            作者
+                        </span>
+                    </div>
+                    <div class="col-xs-9 text-left">
+                        <span>
+                            {{book.author}}
+                        </span>
+                    </div>
+
+                </div>
+
+                <div class="row wrapper-xs">
+                    <div class="col-xs-3 text-right">
+                        <span class="bold">
+                            备注
+                        </span>
+                    </div>
+                    <div class="col-xs-9 text-left">
+                        <span>
+                            {{book.tags}}
+                        </span>
+                    </div>
+                </div>
+
+                <div class="row wrapper-xs">
+                    <div class="col-xs-3 text-right">
+                        <span class="bold">
+                            创建时间
+                        </span>
+                    </div>
+                    <div class="col-xs-9 text-left">
+                        <span>
+                            {{book.create_time}}
+                        </span>
+                    </div>
+                </div>
+
+                <div class="row wrapper-xs">
+                    <div class="col-xs-3 text-right">
+                        <span class="bold">
+                            更新时间
+                        </span>
+                    </div>
+                    <div class="col-xs-9 text-left">
+                        <span>
+                            {{book.update_time}}
+                        </span>
+                    </div>
+                </div>
+
+                <div class="row wrapper-xs">
+                    <div class="col-xs-3 text-right">
+                        <span class="bold">
+                            状态
+                        </span>
+                    </div>
+                    <div class="col-xs-9 text-left">
+                        <span class="label"  ng-class="{'bg-info':book.status=='OK','bg-primary':book.status=='BORROW','bg-warning':book.status=='MISSING'}">
+                                    {{book.status | statusNameFilter}}
+                        </span>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+    </div>
+
+    <div class="col-sm-12 col-md-6" ng-hide="editMode">
+        <div class="row wrapper-xs">
+            <div class="col-xs-12 bg-white">
+                <div class="wrapper">
+                    <ul class="timeline">
+                        <li class="tl-header">
+                            <div class="btn btn-info">Now</div>
+                        </li>
+                        <li class="tl-item" ng-repeat="record in book.records">
+                            <div class="tl-wrap b-primary">
+                                <span class="tl-date">{{record.create_time | date2Readability}}</span>
+                                <div class="tl-content panel padder b-a w-md w-auto-xs">
+                                    <span class="arrow left pull-up"></span>
+                                    <div class="text-lt m-b-sm" ng-show="record.card.name">{{record.card.name}}</div>
+                                    <div class="text-lt m-b-sm" ng-hide="record.card.name">匿名</div>
+                                    <div class="panel-body pull-in b-t b-light">
+                                        <a href="" class="thumb pull-right m-l m-t-xs avatar">
+                                            <img ng-src="{{app.host}}/file/get/id/{{record.card.id_card_image}}" alt="...">
+                                            <i class="on md b-white bottom"></i>
+                                        </a>
+                                        <div class="clear">
+                                            <span href="" class="text-primary block m-b-xs">归还时间：<br>{{record.due_time}}<i class="icon-twitter"></i></span>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </li>
+
+                        <li class="tl-header">
+                            <div class="btn btn-icon btn-rounded btn-default"><i class="fa fa-twitter"></i></div>
+                        </li>
+
+                    </ul>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!--编辑-->
+    <div class="col-sm-12 col-md-6" ng-show="editMode">
+
+        <div class="row wrapper-xs">
+            <div class="col-xs-12 bg-white wrapper-lg">
+                <div class="row wrapper-xs">
+                    <div class="col-xs-12 text-center">
+                        <img class="" ng-src="{{book.large_image}}"/>
+                    </div>
+
+                </div>
+                <div class="row wrapper-xs">
+                    <div class="col-xs-3 text-right">
+                        <span class="bold">图书编号</span>
+                    </div>
+                    <div class="col-xs-9">
+                        <input type="text" class="form-control" ng-model="book.no" disabled>
+                    </div>
+                </div>
+
+                <div class="row wrapper-xs">
+                    <div class="col-xs-3 text-right">
+                        <span class="bold">图书馆</span>
+                    </div>
+                    <div class="col-xs-9">
+                        <input type="text" class="form-control" ng-model="book.library.name" disabled>
+                    </div>
+                </div>
+
+                <div class="row wrapper-xs">
+                    <div class="col-xs-3 text-right">
+                        <span class="bold">书名</span>
+                    </div>
+                    <div class="col-xs-9">
+                        <input type="text" class="form-control" ng-model="book.title">
+                    </div>
+                </div>
+
+                <div class="row wrapper-xs">
+                    <div class="col-xs-3 text-right">
+                        <span class="bold">出版社</span>
+                    </div>
+                    <div class="col-xs-9">
+                        <input type="text" class="form-control" ng-model="book.publisher">
+                    </div>
+                </div>
+
+                <div class="row wrapper-xs">
+                    <div class="col-xs-3 text-right">
+                        <span class="bold">作者</span>
+                    </div>
+                    <div class="col-xs-9">
+                        <input type="text" class="form-control" ng-model="book.author">
+                    </div>
+                </div>
+
+                <div class="row wrapper-xs">
+                    <div class="col-xs-3 text-right">
+                        <span class="bold">备注</span>
+                    </div>
+                    <div class="col-xs-9">
+                        <input type="text" class="form-control" ng-model="book.tags">
+                    </div>
+                </div>
+
+                <div class="row wrapper-xs">
+                    <div class="col-xs-3 text-right">
+                        <span class="bold">创建时间</span>
+                    </div>
+                    <div class="col-xs-9">
+                        <input type="text" class="form-control" ng-model="book.create_time" disabled>
+                    </div>
+                </div>
+
+                <div class="row wrapper-xs">
+                    <div class="col-xs-3 text-right">
+                        <span class="bold">状态</span>
+                    </div>
+                    <div class="col-xs-9">
+                        <select class="form-control m-b" ng-model="book.status">
+                            <option value="OK">正常</option>
+                            <option value="MISSING">挂失</option>
+                            <option value="BORROW">禁用</option>
+                        </select>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+</div>
+
+<script type="text/javascript">
+
+    app.controller('BookDetailController', ['$scope', 'HttpService', '$stateParams', 'toaster',
+        function ($scope, HttpService, $stateParams, toaster) {
+            var book_id = $stateParams.no;
+            $scope.book = {};
+            $scope.editMode = $stateParams.editMode == "true";
+            console.log(typeof $scope.editMode);
+            console.log($scope.editMode);
+            console.log("BookDetailController");
+
+            $scope.refreshCard = function () {
+                var url = $scope.app.host + "/book/detail/id/" + book_id + "/editMode/" + $scope.editMode;
+                console.log(url);
+
+                var params = {};
+                HttpService.post(url, params).then(
+                        function (response) {
+                            $scope.book = response.book;
+                        }
+                );
+
+            };
+
+            $scope.refreshCard();
+
+            //提交表单
+            $scope.submit = function () {
+
+                var url = $scope.app.host + "/book/edit";
+                console.log(url);
+                console.log($scope.book);
+
+                var params = $scope.book;
+
+                HttpService.post(url, params).then(
+                        function (response) {
+                            toaster.pop('success', '成功', '借书证信息修改成功！');
+                            $scope.book = response.book;
+                        }
+                );
+
+            };
+        }]);
+</script>

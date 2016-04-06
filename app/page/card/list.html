@@ -1,0 +1,145 @@
+<div class="wrapper-sm" ng-controller="CardListController">
+    <div class="row">
+        <div class="col-xs-9">
+            <span class="f18">
+                <i class="fa fa-list text-success"></i>
+                借书证列表
+            </span>
+        </div>
+        <div class="col-xs-3">
+            <div class="btn-group dropdown pull-right" dropdown="">
+                <button class="btn" ng-class="{'btn-success':status=='OK','btn-primary':status=='NEW','btn-info':status=='LOSS','btn-dark':status=='ALL','btn-warning':status=='DISABLED'}" dropdown-toggle="" aria-haspopup="true" aria-expanded="false">
+                    {{status | statusNameFilter}}
+                    <span class="caret"></span>
+                </button>
+                <ul class="dropdown-menu">
+                    <li ng-repeat="s in statuses">
+                        <a href="javascript:void(0)" ng-click="changeStatus(s)">
+                            <span class="label" ng-class="{'bg-success':s=='OK','bg-primary':s=='NEW','bg-info':s=='LOSS','bg-dark':s=='ALL','bg-warning':s=='DISABLED'}">
+                                {{s | statusNameFilter}}
+                            </span>
+                            <!--<span class='label bg-{{s | statusClassFilter}}'>{{s | statusNameFilter}}</span>-->
+                        </a>
+                    </li>
+                </ul>
+            </div>
+        </div>
+    </div>
+    <div class="row wrapper">
+        <div class="col-xs-12 text-center italic" ng-hide="cards">
+            该图书馆下目前没有任何借书证
+        </div>
+        <div class="col-xs-12 bg-white wrapper m-b-sm pointer" dir-paginate="card in cards | itemsPerPage: pagination.pageSize"
+             total-items="pagination.totalItems" current-page="pagination.page" ui-sref="app.card.detail({card_id: card.id,editMode: false})">
+            <div class="m-t-xs">
+                图书馆:{{card.library.name}}
+            </div>
+            <div class="m-t-xs">
+                持证人:{{card.name}}
+            </div>
+            <div class="m-t-xs">
+                地址:{{card.address}}
+            </div>
+            <div class="m-t-xs">
+                性别:<i class="icon-symbol-{{card.gender}} m-l"></i>
+                <span ng-show="card.gender=='male'">男</span>
+                <span ng-show="card.gender=='female'">女</span>
+            </div>
+            <div class="m-t-xs">
+                状态：<span class="label" ng-class="{'bg-success':card.status=='OK','bg-primary':card.status=='NEW','bg-info':card.status=='LOSS','bg-dark':card.status=='ALL','bg-warning':card.status=='DISABLED'}">
+                            {{card.status | statusNameFilter}}
+                        </span>
+            </div>
+        </div>
+    </div>
+    <div class="row">
+        <div class="text-center">
+            <dir-pagination-controls on-page-change="pageChanged(newPageNumber)"></dir-pagination-controls>
+        </div>
+    </div>
+</div>
+
+<script type="text/javascript">
+
+    'use strict';
+
+    // signup controller
+    app.controller('CardListController', ['$scope', 'HttpService', '$state','toaster',
+        function ($scope, HttpService, $state,toaster) {
+
+
+        /*******************************分页信息*******************************/
+        $scope.pagination = {
+            page: 1,
+            pageSize: 10,
+            totalItems: 0
+        };
+
+        $scope.pageChanged = function (newPage) {
+            console.log(newPage);
+            $scope.pagination.page = newPage;
+            $scope.refreshCards();
+        };
+        /*********************************************************************/
+
+
+        $scope.refreshCards = function () {
+            var url = $scope.app.host + "/card/page";
+            console.log(url);
+
+
+            var params = {};
+            params["pageSize"] = $scope.pagination.pageSize;
+            params["page"] = $scope.pagination.page;
+            console.log($scope.app.library.id);
+            params["library_id"] = $scope.app.library.id;
+
+
+            if ($scope.status != "ALL") {
+                params["status"] = $scope.status;
+            }
+
+            HttpService.post(url, params).then(
+                    function (response) {
+                        $scope.cards=response.pager.cards;
+
+                        $scope.pagination.totalItems = response["pager"]["totalItems"];
+                    }
+            );
+
+        };
+
+        $scope.refreshCards();
+
+
+
+        /***************************状态******************************************/
+        $scope.statuses = ["ALL","NEW","OK","LOSS","DISABLED"];
+        $scope.status = "ALL";
+        $scope.changeStatus = function (s) {
+            $scope.status = s;
+        };
+        //监控比赛状态变化
+        $scope.$watch('status', function () {
+
+            console.log("status change!");
+            $scope.refreshCards();
+
+        }, true);
+        /**********************************************************************/
+
+        /***************************图书馆*************************************/
+
+        $scope.$watch('app.library.id',function(){
+            console.log("library change!");
+            $scope.refreshCards();
+            $scope.cards = null;
+        });
+
+        /**********************************************************************/
+
+    }])
+
+    ;
+
+</script>

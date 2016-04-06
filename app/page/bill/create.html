@@ -1,0 +1,152 @@
+<div class="wrapper-md" ng-controller="BillCreateController">
+
+    <div class="row m-b-sm">
+        <div class="col-xs-9">
+            <span class="f18">
+                <i class="fa fa-list text-success"></i>
+                捐书单列表
+            </span>
+        </div>
+    </div>
+
+    <div class="row create-block" ng-hide="bill.id">
+
+        <div class="col-md-6 col-sm-12 ">
+
+            <div class="alert alert-info" role="alert">
+                <span class="glyphicon glyphicon-exclamation-sign" aria-hidden="true"></span>
+                请选择图书馆和填写捐书详情，点击提交后会生成一张账单号，您只需要将账单号放置在书籍的包裹中一起寄给我们就完成了捐书。
+
+            </div>
+
+            <form name="form" class="form-validation">
+                <div class="panel panel-default">
+                    <div class="panel-body">
+
+                        <div class="form-group">
+                            <label>图书馆</label>
+                            <ul class="nav bg-light">
+                                <!-- 图书馆 -->
+                                <li class="dropdown" dropdown>
+                                    <a href class="dropdown-toggle" dropdown-toggle>
+                                        {{app.library.name}} <b class="caret"></b>
+                                    </a>
+                                    <!-- dropdown -->
+                                    <ul class="dropdown-menu w">
+                                        <li ng-repeat="t in app.libraries">
+                                            <a ng-click="app.library = t" href>{{t.name}}</a>
+                                        </li>
+                                    </ul>
+                                    <!-- / dropdown -->
+                                </li>
+
+                            </ul>
+
+                            <!--<select class="form-control"-->
+                            <!--ng-model="app.library"-->
+                            <!--ng-options="library as library.name for (key, library) in app.libraries">-->
+                            <!--</select>-->
+                        </div>
+
+
+                        <div class="form-group">
+                            <label>寄件地址</label>
+                            <input type="text" class="form-control" ng-model="app.library.address" ng-disabled="true"
+                                   ng-maxlength="512"
+                                   required/>
+                        </div>
+
+                        <div class="form-group">
+                            <label>捐书详情 <em class="text-muted">如：《三国演义》1本，《红楼梦》1本，《水浒传》2本</em></label>
+                            <textarea class="form-control" ng-model="bill.remark" ng-maxlength="512"
+                                      required></textarea>
+                        </div>
+
+
+                        <footer class="panel-footer text-right bg-light lter">
+                            <button type="submit" class="btn btn-success" ng-disabled="form.$invalid"
+                                    ng-click="submit()">提交
+                            </button>
+                        </footer>
+                    </div>
+                </div>
+            </form>
+
+        </div>
+
+    </div>
+
+    <div class="row result-block" ng-show="bill.id">
+        <div class="col-md-6 col-sm-12 ">
+
+            <div class="alert alert-info" role="alert">
+
+                <p>
+                    <span class="glyphicon glyphicon-exclamation-sign" aria-hidden="true"></span>
+                    请将下列信息(红色框中)抄写或者打印在一张纸上，随同您所捐赠的书籍一同寄往:
+                </p>
+                <strong class="f18">
+                    {{app.library.address}}
+                </strong>
+
+            </div>
+            <div class="alert alert-danger" role="alert">
+                <p class="f16">
+                    <strong>流水号：</strong>
+                    <span>{{bill.id}}</span>
+                </p>
+
+                <p class="f16">
+                    <strong>用户名：</strong>
+                    <span>{{bill.donor.username}}</span>
+                </p>
+
+                <p class="f16">
+                    <strong>姓名：</strong>
+                    <span>{{bill.donor.name}}</span>
+                </p>
+
+                <p class="f16">
+                    <strong>包裹详情：</strong>
+                    <span>{{bill.remark}}</span>
+                </p>
+
+            </div>
+        </div>
+    </div>
+    <div class="row" style="height:400px">
+
+    </div>
+</div>
+
+<script type="text/javascript">
+
+    app.controller('BillCreateController',
+            ['$scope', 'HttpService', 'toaster', 'LaunchService',
+                function ($scope, HttpService, toaster, LaunchService) {
+                    $scope.bill = {};
+
+                    //登录之后才能够进行操作。
+                    LaunchService.checkLogin();
+
+
+                    console.log("BillCreateController");
+
+                    //提交表单
+                    $scope.submit = function () {
+
+                        var url = $scope.app.host + "/bill/create";
+                        $scope.bill.library_id = $scope.app.library.id;
+                        HttpService.post(url, $scope.bill).then(
+                                function (response) {
+                                    toaster.pop('success', '成功', '捐赠信息提交成功！');
+                                    $scope.bill = response.bill;
+                                }
+                        );
+
+
+                    };
+
+                }]);
+
+</script>

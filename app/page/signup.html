@@ -1,0 +1,51 @@
+<div class="container w-xxl w-auto-xs" ng-controller="SignupFormController" ng-init="app.settings.container = false;">
+    <div class="col-sm-12 text-center">
+        <a href="" class="thumb-lg  m-r">
+            <img src="images/logo-green.png" class="img-circle">
+        </a>
+    </div>
+
+    <a href class="navbar-brand block m-t">
+        {{app.name}} - 登录
+    </a>
+
+    <div class="m-b-lg ">
+        <form name="form" class="form-validation">
+            <div class="list-group list-group-sm">
+
+                <div class="list-group-item">
+                    <input type="email" placeholder="邮箱（作为登录账号）" class="form-control no-border" ng-model="user.username"
+                           required>
+                </div>
+
+                <div class="list-group-item">
+                    <input placeholder="姓名" class="form-control no-border" ng-model="user.name" required>
+                </div>
+
+                <div class="list-group-item">
+                    <input type="password" placeholder="密码" class="form-control no-border"
+                           ng-model="user.password" required>
+                </div>
+
+                <div class="list-group-item">
+                    <input type="password" placeholder="确认密码" class="form-control no-border"
+                           ng-model="user.repassword" required>
+                </div>
+
+            </div>
+            <div class="checkbox m-b-md m-t-none">
+                <label class="i-checks">
+                    <input type="checkbox" ng-model="agree" required><i></i> 同意 <a href>用户条款协议</a>
+                </label>
+            </div>
+            <button type="submit" class="btn btn-lg btn-primary btn-block" ng-click="signup()"
+                    ng-disabled='form.$invalid'>注册
+            </button>
+            <div class="line line-dashed"></div>
+            <a ui-sref="access.signin" class="btn btn-lg btn-info btn-block">已有账号，直接登录</a>
+        </form>
+    </div>
+    <div class="text-center" ng-include="'page/tpl/blocks/page_footer.html'">
+        {% include 'blocks/page_footer.html' %}
+    </div>
+</div>

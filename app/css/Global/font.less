@@ -1,0 +1,23 @@
+#font{
+  .f(@from,@end,@step){
+    .mX(@f,@e,@s) when (@e >= @f){
+      .f@{e}{
+        font-size:@e*1px!important;
+      }
+      .mX(@f,@e - @s,@s);
+    }
+    .mX(@from,@end,@step);
+  }
+
+}
+
+#font > .f(10,48,1);
+
+
+.italic{
+  font-style:italic;
+}
+
+.bold{
+  font-weight:bold;
+}

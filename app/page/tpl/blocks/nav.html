@@ -1,0 +1,33 @@
+<!-- list -->
+<ul class="nav">
+
+    <li class="hidden-folded wrapper m-t" ng-show="app.user">
+        <!--<img class="thumb-md m-r-xs" src="/sy/images/a0.jpg"/>-->
+
+        <span class="f14 text-success bold">{{app.user.name}}</span>
+        <div class="f14 text-info bold" ng-show="app.user.role=='ADMIN'">超级管理员</div>
+        <div class="f14 text-info bold" ng-show="app.user.role=='MANAGER'">图书馆管理员</div>
+        <div class="f14 text-info bold" ng-show="app.user.role=='USER'">普通管理员</div>
+    </li>
+
+    <li class="hidden-folded padder m-t m-b-sm text-muted text-xs"  ng-hide="app.user">
+    <span>目录</span>
+    </li>
+
+    <li ui-sref-active="active" ng-hide="app.user">
+        <a ui-sref="access.signin ">
+            <i class="fa fa-user f18 text-info"></i>
+            <span class="font-bold">登录</span>
+        </a>
+    </li>
+
+
+    <li ng-class="{active:$state.includes('app.platform.index')}">
+        <a ui-sref="app.platform.index ">
+            <i class="fa fa-home f18 text-info"></i>
+            <span class="font-bold">首页</span>
+        </a>
+    </li>
+
+</ul>
+<!-- / list -->

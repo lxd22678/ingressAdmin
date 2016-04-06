@@ -1,0 +1,334 @@
+<div class="wrapper-md row" ng-controller="CardDetailController">
+    <div class="col-sm-12 col-md-6 m-b-sm">
+
+        <div class="row m-b-sm">
+            <div class="col-xs-9">
+            <span class="f18">
+                <i class="fa fa-list text-success"></i>
+                证件照片
+            </span>
+            </div>
+        </div>
+
+        <div class="row  wrapper-xs">
+            <div class="col-xs-6 b-r bg-white ">
+                <div class="row">
+                    <div class="col-xs-12 bold wrapper-md text-center">证件照</div>
+                </div>
+
+                <div class="row">
+                    <img class="col-xs-12" ng-src="{{app.host}}/file/get/id/{{card.id_card_image}}"/>
+                </div>
+            </div>
+            <div class="col-xs-6 bg-white ">
+                <div class="row">
+                    <div class="col-xs-12 bold wrapper-md text-center">照片</div>
+                </div>
+
+                <div class="row">
+
+                    <img class="col-xs-12" ng-src="{{app.host}}/file/get/id/{{card.photo}}"/>
+                </div>
+            </div>
+        </div>
+    </div>
+    <!--详情-->
+    <div class="col-sm-12 col-md-6" ng-hide="editMode">
+
+        <div class="row">
+            <div class="col-xs-9">
+                <span class="f18">
+                    <i class="fa fa-list text-success"></i>
+                    借书证详情
+                </span>
+            </div>
+            <div class="col-xs-3">
+                <button class="pull-right btn btn-primary f16" ng-click="editMode=!editMode">
+                    <i class="fa fa-pencil-square-o"></i>
+                    编辑
+                </button>
+            </div>
+        </div>
+
+
+        <div class="row wrapper-xs">
+
+            <div class="col-xs-12 bg-white wrapper-lg">
+                <div class="row wrapper-xs">
+                    <div class="col-xs-3 text-right">
+                        <span class="bold">
+                            证件号
+                        </span>
+                    </div>
+                    <div class="col-xs-9 text-left">
+                        <span>
+                            {{card.no}}
+                        </span>
+                    </div>
+                </div>
+                <div class="row wrapper-xs">
+                    <div class="col-xs-3 text-right">
+                        <span class="bold">
+                            图书馆
+                        </span>
+                    </div>
+                    <div class="col-xs-9 text-left">
+                        <span>
+                            {{card.library.name}}
+                        </span>
+                    </div>
+
+                </div>
+
+                <div class="row wrapper-xs">
+                    <div class="col-xs-3 text-right">
+                        <span class="bold">
+                            持有者
+                        </span>
+                    </div>
+                    <div class="col-xs-9 text-left">
+                        <span>
+                            {{card.name}}
+                        </span>
+                    </div>
+                </div>
+
+                <div class="row wrapper-xs">
+                    <div class="col-xs-3 text-right">
+                        <span class="bold">
+                            地址
+                        </span>
+                    </div>
+                    <div class="col-xs-9 text-left">
+                        <span>
+                            {{card.address}}
+                        </span>
+                    </div>
+                </div>
+
+                <div class="row wrapper-xs">
+                    <div class="col-xs-3 text-right">
+                        <span class="bold">
+                            性别
+                        </span>
+                    </div>
+                    <div class="col-xs-9 text-left">
+                        <i class="icon-symbol-{{card.gender}}"></i>
+                        <span ng-show="card.gender=='male'">男</span>
+                        <span ng-show="card.gender=='female'">女</span>
+                    </div>
+
+                </div>
+
+                <div class="row wrapper-xs">
+                    <div class="col-xs-3 text-right">
+                        <span class="bold">
+                            备注
+                        </span>
+                    </div>
+                    <div class="col-xs-9 text-left">
+                        <span>
+                            {{card.remark}}
+                        </span>
+                    </div>
+                </div>
+
+                <div class="row wrapper-xs">
+                    <div class="col-xs-3 text-right">
+                        <span class="bold">
+                            创建时间
+                        </span>
+                    </div>
+                    <div class="col-xs-9 text-left">
+                        <span>
+                            {{card.create_time}}
+                        </span>
+                    </div>
+                </div>
+
+                <div class="row wrapper-xs">
+                    <div class="col-xs-3 text-right">
+                        <span class="bold">
+                            更新时间
+                        </span>
+                    </div>
+                    <div class="col-xs-9 text-left">
+                        <span>
+                            {{card.update_time}}
+                        </span>
+                    </div>
+                </div>
+
+                <div class="row wrapper-xs">
+                    <div class="col-xs-3 text-right">
+                        <span class="bold">
+                            状态
+                        </span>
+                    </div>
+                    <div class="col-xs-9 text-left">
+                        <span class="label"  ng-class="{'bg-info':card.status=='OK','bg-primary':card.status=='NEW','bg-warning':card.status=='LOSS'}">
+                                    {{card.status | statusNameFilter}}
+                        </span>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+    </div>
+
+    <!--编辑-->
+    <div class="col-sm-12 col-md-6" ng-show="editMode">
+        <div class="row">
+            <div class="col-xs-9">
+                <span class="f18">
+                    <i class="fa fa-list text-success"></i>
+                    借书证编辑
+                </span>
+            </div>
+            <div class="col-xs-3">
+                <button class="pull-right btn btn-primary f16" ng-click="submit();editMode=!editMode">
+                    <i class="fa fa-floppy-o"></i>
+                    保存
+                </button>
+            </div>
+        </div>
+        <div class="row wrapper-xs">
+            <div class="col-xs-12 bg-white wrapper-lg">
+                <div class="row wrapper-xs">
+                    <div class="col-xs-3 text-right">
+                        <span class="bold">证件号</span>
+                    </div>
+                    <div class="col-xs-9">
+                        <input type="text" class="form-control" ng-model="card.no" disabled>
+                    </div>
+                </div>
+
+                <div class="row wrapper-xs">
+                    <div class="col-xs-3 text-right">
+                        <span class="bold">图书馆</span>
+                    </div>
+                    <div class="col-xs-9">
+                        <input type="text" class="form-control" ng-model="card.library.name" disabled>
+                    </div>
+                </div>
+
+                <div class="row wrapper-xs">
+                    <div class="col-xs-3 text-right">
+                        <span class="bold">持有者</span>
+                    </div>
+                    <div class="col-xs-9">
+                        <input type="text" class="form-control" ng-model="card.name">
+                    </div>
+                </div>
+
+                <div class="row wrapper-xs">
+                    <div class="col-xs-3 text-right">
+                        <span class="bold">性别</span>
+                    </div>
+                    <div class="col-xs-9">
+                        <div class="btn-group" ng-init="card.gender = 'male'">
+                            <label class="btn btn-sm btn-info ng-untouched ng-valid active ng-dirty ng-valid-parse"
+                                   ng-model="card.gender" btn-radio="'male'">
+                                <i class="fa fa-check text-active"></i>
+                                男
+                            </label>
+                            <label class="btn btn-sm btn-danger ng-untouched ng-valid ng-dirty"
+                                   ng-model="card.gender" btn-radio="'female'">
+                                <i class="fa fa-check text-active"></i>
+                                女
+                            </label>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="row wrapper-xs">
+                    <div class="col-xs-3 text-right">
+                        <span class="bold">地址</span>
+                    </div>
+                    <div class="col-xs-9">
+                        <input type="text" class="form-control" ng-model="card.address">
+                    </div>
+                </div>
+
+                <div class="row wrapper-xs">
+                    <div class="col-xs-3 text-right">
+                        <span class="bold">备注</span>
+                    </div>
+                    <div class="col-xs-9">
+                        <input type="text" class="form-control" ng-model="card.remark">
+                    </div>
+                </div>
+
+                <div class="row wrapper-xs">
+                    <div class="col-xs-3 text-right">
+                        <span class="bold">创建时间</span>
+                    </div>
+                    <div class="col-xs-9">
+                        <input type="text" class="form-control" ng-model="card.create_time" disabled>
+                    </div>
+                </div>
+
+                <div class="row wrapper-xs">
+                    <div class="col-xs-3 text-right">
+                        <span class="bold">状态</span>
+                    </div>
+                    <div class="col-xs-9">
+                        <select class="form-control m-b" ng-model="card.status">
+                            <option value="NEW">新建</option>
+                            <option value="OK">正常</option>
+                            <option value="LOSS">挂失</option>
+                            <option value="DISABLED">禁用</option>
+                        </select>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+</div>
+
+<script type="text/javascript">
+
+    app.controller('CardDetailController', ['$scope', 'HttpService', '$stateParams', 'toaster',
+        function ($scope, HttpService, $stateParams, toaster) {
+            var card_id = $stateParams.card_id;
+            $scope.card = {};
+            $scope.editMode = $stateParams.editMode == "true";
+            console.log(typeof $scope.editMode);
+            console.log($scope.editMode);
+            console.log("CardDetailController");
+
+            $scope.refreshCard = function () {
+                var url = $scope.app.host + "/card/detail/card_id/" + card_id + "/editMode/" + $scope.editMode;
+                console.log(url);
+
+                var params = {};
+                HttpService.post(url, params).then(
+                        function (response) {
+                            $scope.card = response.card;
+                        }
+                );
+
+            };
+
+            $scope.refreshCard();
+
+
+            //提交表单
+            $scope.submit = function () {
+
+                var url = $scope.app.host + "/card/edit";
+                console.log(url);
+                console.log($scope.card);
+                var params = $scope.card;
+
+                HttpService.post(url, params).then(
+                        function (response) {
+                            toaster.pop('success', '成功', '借书证信息修改成功！');
+                            $scope.card = response.card;
+                        }
+                );
+
+            };
+        }]);
+</script>

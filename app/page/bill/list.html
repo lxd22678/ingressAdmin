@@ -1,0 +1,135 @@
+<div class="wrapper-sm" ng-controller="BillListController">
+
+    <div class="row">
+        <div class="col-xs-9">
+            <span class="f18">
+                <i class="fa fa-list text-success"></i>
+                捐书单列表
+            </span>
+        </div>
+        <div class="col-xs-3">
+            <div class="btn-group dropdown pull-right" dropdown="">
+                <button class="btn btn-{{status | statusClassFilter}}" dropdown-toggle="" aria-haspopup="true" aria-expanded="false">
+                    {{status | statusNameFilter}}
+                    <span class="caret"></span>
+                </button>
+                <ul class="dropdown-menu">
+                    <li ng-repeat="s in statuses">
+                        <a href="javascript:void(0)" ng-click="changeStatus(s)">
+                            <span class='label bg-{{s | statusClassFilter}}'>{{s | statusNameFilter}}</span>
+                        </a>
+                    </li>
+                </ul>
+            </div>
+        </div>
+    </div>
+
+    <div class="row wrapper">
+        <div class="col-xs-12 text-center italic" ng-hide="bills">
+            您没有任何捐书单
+        </div>
+        <div class="col-xs-12 bg-white wrapper m-b-sm pointer" dir-paginate="bill in bills | itemsPerPage: pagination.pageSize"
+             total-items="pagination.totalItems" current-page="pagination.page" ui-sref="app.bill.detail({bill_id: bill.id})">
+            <div class="m-t-xs">
+                流水号：{{bill.id}}
+            </div>
+            <div class="m-t-xs">
+                图书馆：{{bill.library.name}}
+            </div>
+            <div class="m-t-xs">
+                捐书详情：{{bill.remark}}
+            </div>
+            <div class="m-t-xs">
+                状态：<span class="label bg-{{bill.status | statusClassFilter}}">
+                            {{bill.status | statusNameFilter}}
+                        </span>
+            </div>
+            <div class="m-t-xs">
+                捐赠时间：{{bill.create_time}}
+            </div>
+        </div>
+    </div>
+
+    <div class="row">
+        <div class="text-center">
+            <dir-pagination-controls on-page-change="pageChanged(newPageNumber)"></dir-pagination-controls>
+        </div>
+    </div>
+
+
+</div>
+
+<script type="text/javascript">
+
+    'use strict';
+
+    // signup controller
+    app.controller('BillListController', ['$scope', 'HttpService', '$state','toaster',
+        function ($scope, HttpService, $state,toaster) {
+
+
+        /*******************************分页信息*******************************/
+        $scope.pagination = {
+            page: 1,
+            pageSize: 10,
+            totalItems: 0
+        };
+
+        $scope.pageChanged = function (newPage) {
+            console.log(newPage);
+            $scope.pagination.page = newPage;
+            $scope.refreshBills();
+        };
+        /*********************************************************************/
+
+
+        $scope.refreshBills = function () {
+            var url = $scope.app.host + "/bill/page";
+            console.log(url);
+
+
+            var params = {};
+            params["pageSize"] = $scope.pagination.pageSize;
+            params["page"] = $scope.pagination.page;
+
+
+            if ($scope.status != "ALL") {
+                params["status"] = $scope.status;
+            }
+
+            HttpService.post(url, params).then(
+                    function (response) {
+                        $scope.bills=response.pager.bills;
+
+                        $scope.pagination.totalItems = response["pager"]["totalItems"];
+                    }
+            );
+
+        };
+
+        $scope.refreshBills();
+
+
+
+        /***************************状态******************************************/
+        $scope.statuses = ["ALL","ON_ROAD", "OK"];
+        $scope.status = "ALL";
+        $scope.changeStatus = function (s) {
+            $scope.status = s;
+        };
+        //监控比赛状态变化
+        $scope.$watch('status', function () {
+
+            console.log("status change!");
+            $scope.refreshBills();
+
+        }, true);
+        /**********************************************************************/
+
+
+
+    }])
+
+    ;
+
+</script>

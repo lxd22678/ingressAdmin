@@ -1,0 +1,59 @@
+
+body {
+  font-family: "微软雅黑", Microsoft YaHei, "Helvetica Neue", Helvetica, Arial, sans-serif;
+}
+
+//主背景色。
+.app-content-body{
+  background:#F0F3F4;
+}
+
+
+//手型可点击
+.pointer{
+  cursor:pointer;
+}
+
+
+
+
+
+//弹出框的样式SweetAlert字体统一
+.sweet-alert{
+  font-family: "微软雅黑", Microsoft YaHei, "Helvetica Neue", Helvetica, Arial, sans-serif;
+}
+
+
+//把进度加载条的主题改为蓝色
+//\static\fork\angulr-2.0.1\bower_components\angular-loading-bar\src\loading-bar.css
+@theme-color:#edf1f2;
+#loading-bar  {
+  .bar{
+    background: @theme-color;
+  }
+  .peg {
+    -moz-box-shadow: @theme-color 1px 0 6px 1px;
+    -ms-box-shadow: @theme-color 1px 0 6px 1px;
+    -webkit-box-shadow: @theme-color 1px 0 6px 1px;
+    box-shadow: @theme-color 1px 0 6px 1px;
+  }
+  #loading-bar-spinner{
+    .spinner-icon {
+      border-top-color:  @theme-color;
+      border-left-color: @theme-color;
+    }
+  }
+}
+
+.hover-bigger{
+  opacity: 0.8;
+  &:hover{
+    text-decoration: none;
+    opacity: 1;
+    -moz-transform: scale(1.2);
+    -webkit-transform: scale(1.2);
+    -o-transform: scale(1.2);
+    -ms-transform: scale(1.2);
+    transform: scale(1.2);
+  }
+}

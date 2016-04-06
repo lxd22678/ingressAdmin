@@ -1,0 +1,135 @@
+<!DOCTYPE html>
+<html lang="en" data-ng-app="app">
+<head>
+  <meta charset="utf-8" />
+  <title>ingress管理平台</title>
+  <meta name="description" content="Lesai" />
+  <meta name="keywords" content="Lesai" />
+  <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1" />
+  <link rel="shortcut icon" type="image/ico" href="images/favicon.ico">
+  <link rel="stylesheet" href="fork/angulr-2.0.1/bower_components/bootstrap/dist/css/bootstrap.css" type="text/css" />
+  <link rel="stylesheet" href="fork/angulr-2.0.1/bower_components/animate.css/animate.css" type="text/css" />
+  <link rel="stylesheet" href="fork/angulr-2.0.1/bower_components/font-awesome/css/font-awesome.min.css" type="text/css" />
+  <link rel="stylesheet" href="fork/angulr-2.0.1/bower_components/simple-line-icons/css/simple-line-icons.css" type="text/css" />
+  <link rel="stylesheet" href="fork/angulr-2.0.1/src/css/font.css" type="text/css" />
+  <link rel="stylesheet" href="fork/angulr-2.0.1/src/css/app.css" type="text/css" />
+
+  <!--toaster的样式-->
+  <link rel="stylesheet" href="fork/angulr-2.0.1/bower_components/angularjs-toaster/toaster.css" type="text/css" />
+
+  <!--SweetAlert的样式-->
+  <link rel="stylesheet" href="fork/angulr-2.0.1/bower_components/sweetalert/dist/sweetalert.css" type="text/css"/>
+
+
+  <!--loading的样式-->
+  <link rel='stylesheet' href="fork/angulr-2.0.1/bower_components/angular-loading-bar/src/loading-bar.css" type='text/css' media='all' />
+
+  <!--添加自定义css样式-->
+  <link rel="stylesheet" href="css/base.css" type="text/css" />
+
+</head>
+<body ng-controller="AppCtrl">
+    <!-- Toaster的标签，必备 -->
+    <toaster-container toaster-options="{'position-class': 'toast-top-right', 'close-button':true}"></toaster-container>
+
+  <div class="app" id="app" ng-class="{'app-header-fixed':app.settings.headerFixed, 'app-aside-fixed':app.settings.asideFixed, 'app-aside-folded':app.settings.asideFolded, 'app-aside-dock':app.settings.asideDock, 'container':app.settings.container}" ui-view>
+
+
+
+
+  </div>
+
+
+  <!-- jQuery -->
+  <script src="fork/angulr-2.0.1/bower_components/jquery/dist/jquery.min.js"></script>
+
+  <!-- Angular -->
+  <script src="fork/angulr-2.0.1/bower_components/angular/angular.js"></script>
+  
+  <script src="fork/angulr-2.0.1/bower_components/angular-animate/angular-animate.js"></script>
+  <script src="fork/angulr-2.0.1/bower_components/angular-cookies/angular-cookies.js"></script>
+  <script src="fork/angulr-2.0.1/bower_components/angular-resource/angular-resource.js"></script>
+  <script src="fork/angulr-2.0.1/bower_components/angular-sanitize/angular-sanitize.js"></script>
+  <script src="fork/angulr-2.0.1/bower_components/angular-touch/angular-touch.js"></script>
+
+
+  <script src="fork/angulr-2.0.1/bower_components/angular-ui-router/release/angular-ui-router.js"></script>
+  <script src="fork/angulr-2.0.1/bower_components/ngstorage/ngStorage.js"></script>
+  <script src="fork/angulr-2.0.1/bower_components/angular-ui-utils/ui-utils.js"></script>
+
+
+  <!--分页-->
+  <script src="fork/angulr-2.0.1/bower_components/angular-utils-pagination/dirPagination.js"></script>
+
+
+  <!--弹出框Seetalert-->
+  <script src="fork/angulr-2.0.1/bower_components/sweetalert/dist/sweetalert.min.js"></script>
+  <script src="fork/angulr-2.0.1/bower_components/ngSweetAlert/SweetAlert.min.js"></script>
+
+  <!--Loading的东西-->
+  <script src="fork/angulr-2.0.1/bower_components/angular-loading-bar/src/loading-bar.js"></script>
+
+  <!--很多页面都需要的toaster-->
+  <script src="fork/angulr-2.0.1/bower_components/angularjs-toaster/toaster.js"></script>
+
+  <!-- bootstrap -->
+  <script src="fork/angulr-2.0.1/bower_components/angular-bootstrap/ui-bootstrap-tpls.js"></script>
+  <!-- lazyload -->
+  <script src="fork/angulr-2.0.1/bower_components/oclazyload/dist/ocLazyLoad.js"></script>
+  <!-- translate -->
+  <script src="fork/angulr-2.0.1/bower_components/angular-translate/angular-translate.js"></script>
+  <script src="fork/angulr-2.0.1/bower_components/angular-translate-loader-static-files/angular-translate-loader-static-files.js"></script>
+  <script src="fork/angulr-2.0.1/bower_components/angular-translate-storage-cookie/angular-translate-storage-cookie.js"></script>
+  <script src="fork/angulr-2.0.1/bower_components/angular-translate-storage-local/angular-translate-storage-local.js"></script>
+
+  <!--时间选择器-->
+  <script src="fork/datetime-picker-1.1.0/datetime-picker.js"></script>
+
+  <!--富文本-->
+  <script src='fork/angulr-2.0.1/bower_components/textAngular/dist/textAngular-sanitize.min.js'></script>
+  <script src='fork/angulr-2.0.1/bower_components/textAngular/dist/textAngular.min.js'></script>
+
+  <!--文本上传-->
+  <script src="fork/angulr-2.0.1/bower_components/angular-file-upload/angular-file-upload.min.js"></script>
+
+  <!-- App -->
+  <script src="js/app.js"></script>
+  <script src="js/config.js"></script>
+  <script src="js/config.lazyload.js"></script>
+  <script src="js/config.router.js"></script>
+  <script src="js/main.js"></script>
+
+  <!--加载自定义Service-->
+  <script src="js/services/ui-load.js"></script>
+  <script src="js/services/TimeService.js"></script>
+
+  <!--页面转跳等相关的Service-->
+  <script src="js/services/LaunchService.js"></script>
+  <!--Http请求的Service-->
+  <script src="js/services/HttpService.js"></script>
+
+  <!--加载全局变量 如 当前联盟，当前赛季，个人信息-->
+  <script src="js/services/DataService.js"></script>
+
+
+  <!--加载自定义的过滤器-->
+  <script src="js/filters/fromNow.js"></script>
+  <script src="js/filters/utilFilter.js"></script>
+
+  <script src="js/directives/setnganimate.js"></script>
+  <script src="js/directives/ui-butterbar.js"></script>
+  <script src="js/directives/ui-focus.js"></script>
+  <script src="js/directives/ui-fullscreen.js"></script>
+  <script src="js/directives/ui-jq.js"></script>
+  <script src="js/directives/ui-module.js"></script>
+  <script src="js/directives/ui-nav.js"></script>
+  <script src="js/directives/ui-scroll.js"></script>
+  <script src="js/directives/ui-shift.js"></script>
+  <script src="js/directives/ui-toggleclass.js"></script>
+  <script src="js/controllers/bootstrap.js"></script>
+  <!-- Lazy loading -->
+
+
+
+</body>
+</html>

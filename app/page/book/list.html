@@ -1,0 +1,154 @@
+<div class="wrapper-sm" ng-controller="BookListController">
+    <div class="row">
+        <div class="col-xs-6">
+            <span class="f18">
+                <i class="fa fa-list text-success"></i>
+                图书列表
+            </span>
+        </div>
+        <div class="col-xs-6">
+            <div class="btn-group dropdown pull-right" dropdown="">
+                <button class="btn" ng-class="{'btn-success':status=='OK','btn-primary':status=='BORROW','btn-info':status=='MISSING','btn-dark':status=='ALL'}" dropdown-toggle="" aria-haspopup="true" aria-expanded="false">
+                    {{status | statusNameFilter}}
+                    <span class="caret"></span>
+                </button>
+                <ul class="dropdown-menu">
+                    <li ng-repeat="s in statuses">
+                        <a href="javascript:void(0)" ng-click="changeStatus(s)">
+                            <span class="label" ng-class="{'bg-success':s=='OK','bg-primary':s=='BORROW','bg-info':s=='MISSING','bg-dark':s=='ALL'}">
+                                {{s | statusNameFilter}}
+                            </span>
+                            <!--<span class='label bg-{{s | statusClassFilter}}'>{{s | statusNameFilter}}</span>-->
+                        </a>
+                    </li>
+                </ul>
+            </div>
+            <button class="btn btn-info pull-right m-r-md" ng-show="app.user.role=='ADMIN' || app.user.role=='MANAGER'" ng-click="apply()">
+                <i class="fa fa-share"></i>
+                申请
+            </button>
+        </div>
+    </div>
+    <div class="row wrapper">
+        <div class="col-xs-12 text-center italic" ng-hide="books">
+            该图书馆下目前没有任何图书
+        </div>
+        <div class="col-xs-12 bg-white wrapper m-b-sm pointer" dir-paginate="book in books | itemsPerPage: pagination.pageSize"
+             total-items="pagination.totalItems" current-page="pagination.page" ui-sref="app.book.detail({no: book.id,editMode: false})">
+            <img class="pull-left m-r-md thumb-lg" ng-src="{{book.image}}"/>
+            <div class="m-t-xs">
+                图书馆:{{book.library.name}}
+            </div>
+            <div class="m-t-xs">
+                书名:{{book.title}}
+            </div>
+            <div class="m-t-xs">
+                出版社:{{book.publisher}}
+            </div>
+
+            <div class="m-t-xs">
+                状态：<span class="label" ng-class="{'bg-success':book.status=='OK','bg-primary':book.status=='BORROW','bg-info':book.status=='MISSING','bg-dark':book.status=='ALL'}">
+                            {{book.status | statusNameFilter}}
+                        </span>
+            </div>
+        </div>
+    </div>
+    <div class="row">
+        <div class="text-center">
+            <dir-pagination-controls on-page-change="pageChanged(newPageNumber)"></dir-pagination-controls>
+        </div>
+    </div>
+</div>
+
+<script type="text/javascript">
+
+    app.controller('BookListController', ['$scope', 'HttpService', '$state','toaster',
+        function ($scope, HttpService, $state,toaster) {
+
+
+            /*******************************分页信息*******************************/
+            $scope.pagination = {
+                page: 1,
+                pageSize: 10,
+                totalItems: 0
+            };
+
+            $scope.pageChanged = function (newPage) {
+                console.log(newPage);
+                $scope.pagination.page = newPage;
+                $scope.refreshBooks();
+            };
+            /*********************************************************************/
+
+
+            $scope.refreshBooks = function () {
+                var url = $scope.app.host + "/book/page";
+                console.log(url);
+
+
+                var params = {};
+                params["pageSize"] = $scope.pagination.pageSize;
+                params["page"] = $scope.pagination.page;
+                console.log($scope.app.library.id);
+                params["library_id"] = $scope.app.library.id;
+
+
+                if ($scope.status != "ALL") {
+                    params["status"] = $scope.status;
+                }
+
+                HttpService.post(url, params).then(
+                        function (response) {
+                            $scope.books=response.pager.books;
+
+                            $scope.pagination.totalItems = response["pager"]["totalItems"];
+                        }
+                );
+
+            };
+
+            $scope.refreshBooks();
+
+
+
+            /***************************状态******************************************/
+            $scope.statuses = ["ALL","OK","BORROW","MISSING"];
+            $scope.status = "ALL";
+            $scope.changeStatus = function (s) {
+                $scope.status = s;
+            };
+            //监控比赛状态变化
+            $scope.$watch('status', function () {
+
+                console.log("status change!");
+                $scope.refreshBooks();
+
+            }, true);
+            /**********************************************************************/
+
+            /***************************图书馆*************************************/
+
+            $scope.$watch('app.library.id',function(){
+                console.log("library change!");
+                $scope.refreshBooks();
+//                $scope.books = null;
+            });
+
+            /*****************************申请二维码标签*************************************/
+            $scope.apply = function(){
+                var url = $scope.app.host + "/library/apply";
+                var params = {};
+                params["id"] = $scope.app.library.id;
+
+                HttpService.post(url,params).then(
+                        function(response){
+                            toaster.pop("success", '成功', '申请二维码邮件发送成功！');
+                        }
+                )
+            };
+
+        }])
+
+    ;
+
+</script>

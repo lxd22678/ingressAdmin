@@ -1,0 +1,160 @@
+<div class="wrapper-sm" ng-controller="LibraryListController">
+    <div class="row">
+        <div class="col-xs-6">
+            <span class="f18">
+                <i class="fa fa-list text-success"></i>
+                图书馆列表
+            </span>
+        </div>
+        <div class="col-xs-6">
+            <div class="btn-group dropdown pull-right" dropdown="">
+                <button class="btn" ng-class="{'btn-success':status=='OK','btn-primary':status=='NEW','btn-warning':status=='DISABLED','btn-dark':status=='ALL'}" dropdown-toggle="" aria-haspopup="true" aria-expanded="false">
+                    {{status | statusNameFilter}}
+                    <span class="caret"></span>
+                </button>
+                <ul class="dropdown-menu">
+                    <li ng-repeat="s in statuses">
+                        <a href="javascript:void(0)" ng-click="changeStatus(s)">
+                            <span class="label" ng-class="{'bg-success':s=='OK','bg-primary':s=='NEW','bg-info':s=='LOSS','bg-dark':s=='ALL','bg-warning':s=='DISABLED','bg-dark':s=='ALL'}">
+                                {{s | statusNameFilter}}
+                            </span>
+                        </a>
+                    </li>
+                </ul>
+            </div>
+
+            <button class="btn btn-success pull-right m-r-md" ng-show="app.user.role=='ADMIN'" ui-sref="app.library.create">
+                <i class="fa fa-plus"></i>
+                添加
+            </button>
+
+        </div>
+    </div>
+    <div class="row wrapper">
+        <div class="col-xs-12 text-center italic" ng-hide="librarys">
+            目前没有图书馆加盟
+        </div>
+        <div class="col-xs-12 bg-white wrapper m-b-sm pointer" dir-paginate="lib in librarys | itemsPerPage: pagination.pageSize" total-items="pagination.totalItems" current-page="pagination.page" ui-sref="app.library.detail({library_id: lib.id,editMode: false})">
+            <div class="pull-right m-t-lg m-r-md" ng-show="app.user.role=='ADMIN'" ng-click="$event.stopPropagation();">
+                <i class="fa fa-trash f20 text-danger hover-bigger" ng-click="trash(lib.id);" ng-show="lib.status!='DISABLED'"></i>
+                <i class="fa fa-repeat f20 text-success hover-bigger" ng-click="enable(lib.id);" ng-show="lib.status=='DISABLED'"></i>
+            </div>
+            <div class="m-t-xs">
+                图书馆:{{lib.name}}
+            </div>
+            <div class="m-t-xs">
+                描述:{{lib.description}}
+            </div>
+            <div class="m-t-xs">
+                地址:{{lib.address}}
+            </div>
+
+            <div class="m-t-xs">
+                状态：<span class="label" ng-class="{'bg-success':lib.status=='OK','bg-primary':lib.status=='NEW','bg-info':lib.status=='LOSS','bg-dark':lib.status=='ALL','bg-warning':lib.status=='DISABLED'}">
+                            {{lib.status | statusNameFilter}}
+                        </span>
+            </div>
+        </div>
+    </div>
+    <div class="row">
+        <div class="text-center">
+            <dir-pagination-controls on-page-change="pageChanged(newPageNumber)"></dir-pagination-controls>
+        </div>
+    </div>
+</div>
+
+<script type="text/javascript">
+    app.controller('LibraryListController',['$scope','HttpService','$state','toaster','SweetAlert',
+    function($scope,HttpService,$state,toaster,SweetAlert){
+        $scope.pagination = {
+            page:1,
+            pageSize:10,
+            totalItems:0
+        };
+        $scope.pageChanged = function(newPage){
+            console.log(newPage);
+            $scope.pagination.page = newPage;
+            $scope.refreshLibrarys();
+        };
+        $scope.refreshLibrarys = function(){
+            var url = $scope.app.host + "/library/page";
+            console.log(url);
+
+            var params = {};
+            params["pageSize"] = $scope.pagination.pageSize;
+            params["page"] = $scope.pagination.page;
+
+            if($scope.status != "ALL"){
+                params["status"] = $scope.status;
+            }
+
+            HttpService.post(url,params).then(
+                    function(response){
+                        console.log(response);
+                        $scope.librarys = response.pager.libraries;
+                        $scope.pagination.totalItems = response["pager"]["totalItems"];
+                        console.log($scope.librarys);
+                    }
+            )
+        };
+
+        $scope.refreshLibrarys();
+
+        /*****************启用*****************/
+        $scope.enable = function(libraryId){
+            var url = $scope.app.host + "/library/enable";
+            var params = {};
+            params["id"] = libraryId;
+
+            HttpService.post(url,params).then(
+                    function(response){
+                        toaster.pop("success", '成功', '图书馆启用成功！');
+                        $scope.refreshLibrarys();
+                    }
+            )
+        };
+        /*****************删除********************/
+        $scope.trash = function(libraryId){
+
+            SweetAlert.swal({
+                title: "确认禁用图书馆？",
+                text: "请注意，禁用后可能无法恢复！",
+                type: "warning",
+                showCancelButton: true,
+                cancelButtonText: "取消",
+                confirmButtonColor: "#DD6B55",
+                showConfirmButton: true,
+                confirmButtonText: "确认",
+                closeOnConfirm: true
+            }, function (isConfirm) {
+
+                if (isConfirm) {
+                    var url = $scope.app.host + "/library/delete";
+                    console.log("in");
+                    var params = {};
+                    params["id"] = libraryId;
+
+                    HttpService.post(url,params).then(
+                            function(response){
+                                console.log(response);
+                                toaster.pop("success", '成功', '图书馆删除成功！');
+                                $scope.refreshLibrarys();
+                            }
+                    )
+                }
+            });
+
+        };
+
+        $scope.statuses = ["ALL","NEW","OK","DISABLED"];
+        $scope.status = "ALL";
+        $scope.changeStatus = function(s){
+            $scope.status = s;
+        };
+
+        $scope.$watch('status',function(){
+            console.log("status change!");
+            $scope.refreshLibrarys();
+        },true);
+    }]);
+</script>

@@ -1,0 +1,98 @@
+<div class="wrapper" ng-controller="BillDetailController">
+
+    <div class="row">
+        <span class="f18 m-l-sm">
+            <i class="fa fa-bars text-success"></i>
+            捐赠单详情
+        </span>
+    </div>
+
+    <div class="row wrapper">
+        <div class="col-xs-12 bg-white wrapper">
+            <div class="m-b-xs">流水号：{{bill.id}}</div>
+            <div class="m-b-xs">图书馆：{{bill.library.name}}</div>
+            <div class="m-b-xs">图书馆地址：{{bill.library.address}}</div>
+            <div class="m-b-xs">
+                备注：{{bill.remark}}
+            </div>
+            <div class="m-b-xs">
+                状态： <span class="label" ng-class="{'bg-success':bill.status=='OK','bg-warning':bill.status=='ON_ROAD'}">
+                            {{bill.status | statusNameFilter}}
+                        </span>
+            </div>
+            <div class="m-b-xs">
+                时间：{{bill.create_time}}
+            </div>
+
+        </div>
+    </div>
+
+
+    <div class="row">
+        <span class="f18 m-l-sm">
+            <i class="fa fa-bars text-success"></i>
+            书籍详情
+        </span>
+    </div>
+
+    <div class="row wrapper">
+        <div class="col-xs-12 text-center italic" ng-hide="bill.books">
+            您没有任何捐书单
+        </div>
+        <div class="col-xs-12 bg-white wrapper m-b-sm" ng-repeat="book in bill.books" ui-sref="app.book.detail({no: book.id,editMode: false})">
+
+            <img class="pull-left m-r-md thumb-lg" ng-src="{{book.image}}"/>
+
+            <div class="clear">
+                <div class="m-t-xs">
+                    编号：{{book.no}}
+                </div>
+                <div class="m-t-xs">
+                    标题：{{book.title}}
+                </div>
+                <div class="m-t-xs">
+                    状态：<span class="label" ng-class="{'bg-success':book.status=='OK','bg-info':book.status=='BORROW','bg-danger':book.status=='MISSING'}">
+                            {{book.status | statusNameFilter}}
+                        </span>
+                </div>
+
+            </div>
+
+        </div>
+
+    </div>
+
+
+</div>
+
+<script type="text/javascript">
+
+    app.controller('BillDetailController',
+            ['$scope', 'HttpService', '$stateParams', 'toaster',
+                function ($scope, HttpService, $stateParams, toaster) {
+
+
+                    var bill_id = $stateParams.bill_id;
+
+                    $scope.bill = {};
+
+                    console.log("BillDetailController");
+
+
+                    $scope.refreshBill = function () {
+                        var url = $scope.app.host + "/bill/detail/bill_id/" + bill_id;
+                        var params = {};
+                        HttpService.post(url, params).then(
+                                function (response) {
+                                    $scope.bill = response.bill;
+                                }
+                        );
+
+                    };
+
+                    $scope.refreshBill();
+
+
+                }]);
+
+</script>

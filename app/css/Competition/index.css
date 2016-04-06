@@ -1,0 +1,6 @@
+.statTable tr td {
+  padding: 1px!important;
+}
+.statTable tr td.nameTd {
+  padding: 8px!important;
+}

@@ -1,0 +1,37 @@
+body {
+  font-family: "微软雅黑", Microsoft YaHei, "Helvetica Neue", Helvetica, Arial, sans-serif;
+}
+.app-content-body {
+  background: #F0F3F4;
+}
+.pointer {
+  cursor: pointer;
+}
+.sweet-alert {
+  font-family: "微软雅黑", Microsoft YaHei, "Helvetica Neue", Helvetica, Arial, sans-serif;
+}
+#loading-bar .bar {
+  background: #edf1f2;
+}
+#loading-bar .peg {
+  -moz-box-shadow: #edf1f2 1px 0 6px 1px;
+  -ms-box-shadow: #edf1f2 1px 0 6px 1px;
+  -webkit-box-shadow: #edf1f2 1px 0 6px 1px;
+  box-shadow: #edf1f2 1px 0 6px 1px;
+}
+#loading-bar #loading-bar-spinner .spinner-icon {
+  border-top-color: #edf1f2;
+  border-left-color: #edf1f2;
+}
+.hover-bigger {
+  opacity: 0.8;
+}
+.hover-bigger:hover {
+  text-decoration: none;
+  opacity: 1;
+  -moz-transform: scale(1.2);
+  -webkit-transform: scale(1.2);
+  -o-transform: scale(1.2);
+  -ms-transform: scale(1.2);
+  transform: scale(1.2);
+}

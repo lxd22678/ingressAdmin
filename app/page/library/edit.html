@@ -1,0 +1,222 @@
+<div class="row wrapper-md" ng-controller="LibraryEditController">
+    <div class="col-xs-12">
+        <div class="row m-b-sm ">
+            <div class="col-xs-9   ">
+                <span class="f18">
+                    <i class="fa fa-list text-success"></i>
+                    图书馆详情
+                </span>
+            </div>
+            <div class="col-xs-3">
+                <button class="pull-right btn btn-info f16" ng-click="submit();">
+                    <i class="fa fa-floppy-o"></i>
+                    保存
+                </button>
+            </div>
+        </div>
+        <div class="row wrapper-md">
+            <div class="m-b-md col-xs-12">
+                <div class="row">
+                    <div lazy-load="textAngular">
+                        <div text-angular ng-model="lib.text" class="btn-groups"></div>
+                    </div>
+                </div>
+            </div>
+            <div class="col-xs-12">
+
+                <div class="row" nv-file-drop="" uploader="uploader" filters="queueLimit, customFilter">
+                    <div class="alert alert-info text-center" role="alert">
+                        <span class="glyphicon glyphicon-exclamation-sign" aria-hidden="true"></span>
+                        需要添加的图片请先上传，然后把<strong>图片路径</strong>复制到富文本中插入图片中。
+
+                    </div>
+                    <div class="col-sm-12 col-md-3 bg-light bg-auto">
+                        <div class="wrapper-md dker">
+                            <h3 class="m-n font-thin text-center">选择图片</h3>
+                        </div>
+                        <div class="wrapper-md">
+                            <div ng-show="uploader.isHTML5" class="m-b-md">
+                                <!-- 3. nv-file-over uploader="link" over-class="className" -->
+                                <div class="b-a b-2x b-dashed wrapper-lg bg-white text-center m-b" nv-file-over=""
+                                     over-class="b-info" uploader="uploader">
+                                    请将需要上传的图片拖到这里！
+                                </div>
+                            </div>
+
+                            <!-- Example: nv-file-select="" uploader="{Object}" options="{Object}" filters="{String}" -->
+
+                            <p class="m-t-md"></p>
+                            <input type="file" nv-file-select="" uploader="uploader"/>
+                        </div>
+                    </div>
+                    <div class="col-sm-12 col-md-9">
+                        <div class="row wrapper-md bg-light dk b-b">
+                            <div class="col-xs-12">
+                                <span class="pull-right m-t-xs">总数: <b class="badge bg-info">{{ uploader.queue.length
+                                    }}</b></span>
+
+                                <h3 class="m-n font-thin">上传状态表</h3>
+                            </div>
+
+                        </div>
+                        <div class="row wrapper bg-white m-b-xs" ng-repeat="item in uploader.queue">
+                            <div class="col-xs-3 m-t-xs">
+                                <span class="bold">名称:</span>
+                            </div>
+                            <div class="col-xs-9 m-t-xs">
+                                <span>{{ item.file.name }}</span>
+                            </div>
+                            <div class="col-xs-3 m-t-xs">
+                                <span class="bold" ng-show="uploader.isHTML5">
+                                    大小:
+                                </span>
+                            </div>
+                            <div class="col-xs-9 m-t-xs">
+                                <span ng-show="uploader.isHTML5">
+                                    {{ item.file.size/1024/1024|number:2 }} MB
+                                </span>
+                            </div>
+
+
+                            <div class="col-xs-3 m-t-xs" ng-show="uploader.isHTML5">
+                                <span class="bold">
+                                    图片路径:
+                                </span>
+                            </div>
+                            <div class="col-xs-9 m-t-xs" ng-show="uploader.isHTML5">
+                                <span>
+                                    {{item.file_url}}
+                                </span>
+                            </div>
+
+                            <div class="col-xs-3 m-t-xs">
+                                <span class="bold">
+                                    状态:
+                                </span>
+                            </div>
+                            <div class="col-xs-9 m-t-xs">
+                                <span ng-show="item.isSuccess" class="text-success"><i
+                                        class="glyphicon glyphicon-ok"></i></span>
+                                <span ng-show="item.isCancel" class="text-warning"><i
+                                        class="glyphicon glyphicon-ban-circle"></i></span>
+                                <span ng-show="item.isError" class="text-danger"><i
+                                        class="glyphicon glyphicon-remove"></i></span>
+                            </div>
+
+                            <div class="col-xs-12 m-t-xs" ng-show="uploader.isHTML5">
+                                <div class="progress progress-sm m-b-none m-t-xs">
+                                    <div class="progress-bar bg-info" role="progressbar"
+                                         ng-style="{ 'width': item.progress + '%' }"></div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+</div>
+
+<!--item.upload()-->
+<!--uploader.uploadAll()-->
+<script type="text/javascript">
+    app.controller('LibraryEditController', ['$scope', 'HttpService', '$stateParams', '$state', 'SweetAlert', 'toaster', 'cfpLoadingBar', 'FileUploader',
+        function ($scope, HttpService, $stateParams, $state, SweetAlert, toaster, cfpLoadingBar, FileUploader) {
+//            $scope.htmlVariable = $scope.app.library.text;
+
+            var library_id = $stateParams.library_id;
+            var lib;
+            for (var i = 0; i < $scope.app.libraries.length; i++) {
+                if ($scope.app.libraries[i].id == library_id) {
+                    lib = $scope.app.libraries[i];
+                }
+            }
+            $scope.lib = lib;
+            console.log("libraryedit");
+            console.log(library_id);
+            console.log(lib);
+
+            $scope.submit = function () {
+                var url = $scope.app.host + "/library/edit";
+                console.log(url);
+                var params = lib;
+                HttpService.post(url, params).then(
+                        function (response) {
+                            toaster.pop("success", '成功', '图书馆信息修改成功！');
+                            $scope.app.library = response.library;
+                            $state.go("app.library.index");
+                        }
+                )
+            };
+            /*****************************fileupload***********************************************/
+
+            var uploader = $scope.uploader = new FileUploader({
+                url: $scope.app.host + '/file/upload'
+//                url: 'js/controllers/upload.php'
+            });
+
+            // FILTERS
+
+            uploader.filters.push({
+                name: 'customFilter',
+                fn: function (item /*{File|FileLikeObject}*/, options) {
+                    return this.queue.length < 10;
+                }
+            });
+
+            // CALLBACKS
+
+            uploader.onWhenAddingFileFailed = function (item /*{File|FileLikeObject}*/, filter, options) {
+                console.info('onWhenAddingFileFailed', item, filter, options);
+            };
+            uploader.onAfterAddingFile = function (fileItem) {
+                console.info('onAfterAddingFile', fileItem);
+                fileItem.upload();
+            };
+            uploader.onAfterAddingAll = function (addedFileItems) {
+                console.info('onAfterAddingAll', addedFileItems);
+            };
+            uploader.onBeforeUploadItem = function (item) {
+                console.info('onBeforeUploadItem', item);
+            };
+            uploader.onProgressItem = function (fileItem, progress) {
+                console.info('onProgressItem', fileItem, progress);
+            };
+            uploader.onProgressAll = function (progress) {
+                console.info('onProgressAll', progress);
+            };
+            uploader.onSuccessItem = function (fileItem, response, status, headers) {
+                console.info('onSuccessItem', fileItem, response, status, headers);
+                console.info('uploader', uploader);
+            };
+            uploader.onErrorItem = function (fileItem, response, status, headers) {
+                console.info('onErrorItem', fileItem, response, status, headers);
+            };
+            uploader.onCancelItem = function (fileItem, response, status, headers) {
+                console.info('onCancelItem', fileItem, response, status, headers);
+            };
+            uploader.onCompleteItem = function (fileItem, response, status, headers) {
+                console.info('onCompleteItem', fileItem, response, status, headers);
+                console.info('response file_id', $scope.app.host + "/file/get/id/" + response.file.file_id);
+                if (response.status == "OK") {
+                    fileItem["file_url"] = $scope.app.host + "/file/get/id/" + response.file.file_id;
+                    fileItem.isSuccess = true;
+                    fileItem.isError = false;
+                } else {
+                    fileItem.isSuccess = false;
+                    fileItem.isError = true;
+                    fileItem.progress = 0
+                }
+
+            };
+            uploader.onCompleteAll = function () {
+                console.info('onCompleteAll');
+            };
+
+            console.info('uploader', uploader);
+
+            /***********************************************************************************/
+
+        }]);
+</script>

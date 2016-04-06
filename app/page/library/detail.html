@@ -1,0 +1,296 @@
+<div class="wrapper-md" ng-controller="LibraryDetailController">
+    <div class="row m-b-md">
+        <!--详情-->
+        <div class="col-sm-12 col-md-12" ng-hide="editMode">
+
+            <div class="row m-b-sm">
+                <div class="col-xs-6">
+                <span class="f18">
+                    <i class="fa fa-list text-success"></i>
+                    图书馆信息显示
+                </span>
+                </div>
+                <div class="col-xs-6">
+                    <button class="pull-right btn btn-primary f16" ng-click="editMode=!editMode">
+                        <i class="fa fa-pencil-square-o "></i>
+                        编辑
+                    </button>
+                </div>
+            </div>
+            <div class="row wrapper-xs">
+                <div class="col-xs-12 bg-white wrapper-lg">
+                    <div class="row wrapper-xs">
+                        <div class="col-xs-3 text-right ">
+                        <span class="bold ">
+                            图书馆名
+                        </span>
+                        </div>
+                        <div class="col-xs-9 text-left">
+                        <span>
+                            {{lib.name}}
+                        </span>
+                        </div>
+                    </div>
+                    <div class="row wrapper-xs">
+                        <div class="col-xs-3 text-right">
+                        <span class="bold">
+                            图书馆描述
+                        </span>
+                        </div>
+                        <div class="col-xs-9 text-left">
+                        <span>
+                            {{lib.description}}
+                        </span>
+                        </div>
+
+                    </div>
+
+                    <div class="row wrapper-xs">
+                        <div class="col-xs-3 text-right">
+                        <span class="bold">
+                            地址
+                        </span>
+                        </div>
+                        <div class="col-xs-9 text-left">
+                        <span>
+                            {{lib.address}}
+                        </span>
+                        </div>
+                    </div>
+
+                    <div class="row wrapper-xs">
+                        <div class="col-xs-3 text-right">
+                        <span class="bold">
+                            借书量
+                        </span>
+                        </div>
+                        <div class="col-xs-9 text-left">
+                        <span>
+                            {{lib.borrow_num}}
+                        </span>
+                        </div>
+                    </div>
+
+                    <div class="row wrapper-xs">
+                        <div class="col-xs-3 text-right">
+                        <span class="bold">
+                            藏书量
+                        </span>
+                        </div>
+                        <div class="col-xs-9 text-left">
+                        <span>
+                            {{lib.bookCount}}
+                        </span>
+                        </div>
+                    </div>
+
+                    <div class="row wrapper-xs">
+                        <div class="col-xs-3 text-right">
+                        <span class="bold">
+                            读者数量
+                        </span>
+                        </div>
+                        <div class="col-xs-9 text-left">
+                        <span>
+                            {{lib.cardCount}}
+                        </span>
+                        </div>
+                    </div>
+
+                    <div class="row wrapper-xs">
+                        <div class="col-xs-3 text-right">
+                        <span class="bold">
+                            创建时间
+                        </span>
+                        </div>
+                        <div class="col-xs-9 text-left">
+                        <span>
+                            {{lib.create_time}}
+                        </span>
+                        </div>
+                    </div>
+
+                    <div class="row wrapper-xs">
+                        <div class="col-xs-3 text-right">
+                        <span class="bold">
+                            更新时间
+                        </span>
+                        </div>
+                        <div class="col-xs-9 text-left">
+                        <span>
+                            {{lib.update_time}}
+                        </span>
+                        </div>
+                    </div>
+
+                    <div class="row wrapper-xs">
+                        <div class="col-xs-3 text-right">
+                        <span class="bold">
+                            状态
+                        </span>
+                        </div>
+                        <div class="col-xs-9 text-left">
+                        <span class="label"
+                              ng-class="{'btn-success':lib.status=='OK','btn-primary':lib.status=='NEW','btn-warning':lib.status=='DISABLED','btn-dark':lib.status=='ALL'}">
+                                    {{lib.status | statusNameFilter}}
+                        </span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!--编辑-->
+        <div class="col-sm-12 col-md-12" ng-show="editMode">
+            <div class="row m-b-sm">
+                <div class="col-xs-9">
+                <span class="f18">
+                    <i class="fa fa-list text-success"></i>
+                    图书馆详情修改
+                </span>
+                </div>
+                <div class="col-xs-3">
+                    <button class="pull-right btn btn-success f16" ng-click="submit();editMode=!editMode">
+                        <i class="fa fa-floppy-o"></i>
+                        保存
+                    </button>
+                </div>
+            </div>
+            <div class="row wrapper-xs">
+                <div class="col-xs-12 bg-white wrapper-lg">
+                    <div class="row wrapper-xs">
+                        <div class="col-xs-3 text-right">
+                            <span class="bold">图书馆名</span>
+                        </div>
+                        <div class="col-xs-9">
+                            <input type="text" class="form-control" ng-model="lib.name">
+                        </div>
+                    </div>
+
+                    <div class="row wrapper-xs">
+                        <div class="col-xs-3 text-right">
+                            <span class="bold">图书馆描述</span>
+                        </div>
+                        <div class="col-xs-9">
+                            <input type="text" class="form-control" ng-model="lib.description">
+                        </div>
+                    </div>
+
+                    <div class="row wrapper-xs">
+                        <div class="col-xs-3 text-right">
+                            <span class="bold">地址</span>
+                        </div>
+                        <div class="col-xs-9">
+                            <input type="text" class="form-control" ng-model="lib.address">
+                        </div>
+                    </div>
+
+                    <div class="row wrapper-xs">
+                        <div class="col-xs-3 text-right">
+                            <span class="bold">借书量</span>
+                        </div>
+                        <div class="col-xs-9">
+                            <input type="text" class="form-control" ng-model="lib.borrow_num" disabled>
+                        </div>
+                    </div>
+
+                    <div class="row wrapper-xs">
+                        <div class="col-xs-3 text-right">
+                            <span class="bold">创建时间</span>
+                        </div>
+                        <div class="col-xs-9">
+                            <input type="text" class="form-control" ng-model="lib.create_time" disabled>
+                        </div>
+                    </div>
+
+                    <div class="row wrapper-xs">
+                        <div class="col-xs-3 text-right">
+                            <span class="bold">更新时间</span>
+                        </div>
+                        <div class="col-xs-9">
+                            <input type="text" class="form-control" ng-model="lib.update_time" disabled>
+                        </div>
+                    </div>
+
+                    <div class="row wrapper-xs">
+                        <div class="col-xs-3 text-right">
+                        <span class="bold">
+                            状态
+                        </span>
+                        </div>
+                        <div class="col-xs-9 text-left">
+                        <span class="label"
+                              ng-class="{'btn-success':lib.status=='OK','btn-primary':lib.status=='NEW','btn-warning':lib.status=='DISABLED','btn-dark':lib.status=='ALL'}">
+                                    {{lib.status | statusNameFilter}}
+                        </span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="row">
+        <div class="col-xs-6">
+                <span class="f18">
+                    <i class="fa fa-list text-success"></i>
+                    图书馆详情显示
+                </span>
+        </div>
+        <div class="col-xs-6">
+            <button class="pull-right btn btn-info f16" ui-sref="app.library.edit({library_id: lib.id})">
+                <i class="fa fa-pencil-square-o "></i>
+                编辑
+            </button>
+        </div>
+    </div>
+
+    <div class="row wrapper-xs">
+        <div class="col-xs-12 bg-white " ng-bind-html="lib.text">
+        </div>
+    </div>
+
+</div>
+
+<script type="text/javascript">
+
+    app.controller('LibraryDetailController', ['$scope', 'HttpService', '$stateParams', 'toaster',
+        function ($scope, HttpService, $stateParams, toaster) {
+            var library_id = $stateParams.library_id;
+            $scope.lib = {};
+            $scope.editMode = $stateParams.editMode == "true";
+
+            $scope.refreshLib = function () {
+                var url = $scope.app.host + "/library/detail/library_id/" + library_id + "/editMode/" + $scope.editMode;
+                console.log(url);
+
+                var params = {};
+                HttpService.post(url, params).then(
+                        function (response) {
+                            $scope.lib = response.library;
+                        }
+                );
+
+            };
+
+            $scope.refreshLib();
+
+            //提交表单
+            $scope.submit = function () {
+
+                var url = $scope.app.host + "/library/edit";
+                console.log(url);
+                console.log($scope.book);
+
+                var params = $scope.lib;
+
+                HttpService.post(url, params).then(
+                        function (response) {
+                            toaster.pop('success', '成功', '借书证信息修改成功！');
+//                            $scope.lib = response.lib;
+                        }
+                );
+
+            };
+        }]);
+</script>

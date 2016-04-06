@@ -1,0 +1,127 @@
+<div class="row wrapper-md" ng-controller="UserEditController">
+    <div class="col-xs-12">
+        <div class="row m-b-sm ">
+            <div class="col-sm-6 col-md-3">
+                <span class="f18">
+                    <i class="fa fa-list text-success"></i>
+                    用户权限管理
+                </span>
+            </div>
+            <div class="col-sm-6 col-md-3">
+                <button class="pull-right btn btn-info f16" ng-click="submit();">
+                    <i class="fa fa-floppy-o"></i>
+                    保存
+                </button>
+            </div>
+        </div>
+        <div class="row">
+            <!--编辑-->
+            <div class="col-sm-12 col-md-6">
+
+                <div class="row wrapper-xs">
+                    <div class="col-xs-12 bg-white wrapper-lg">
+
+                        <div class="row wrapper-xs">
+                            <div class="col-xs-3 text-right">
+                                <span class="bold">用户名:</span>
+                            </div>
+                            <div class="col-xs-9">
+                                <input type="text" class="form-control" ng-model="user.username" disabled>
+                            </div>
+                        </div>
+
+                        <div class="row wrapper-xs">
+                            <div class="col-xs-3 text-right">
+                                <span class="bold">姓名:</span>
+                            </div>
+                            <div class="col-xs-9">
+                                <input type="text" class="form-control" ng-model="user.name" disabled>
+                            </div>
+                        </div>
+
+                        <div class="row wrapper-xs">
+                            <div class="col-xs-3 text-right">
+                                <span class="bold">身份</span>
+                            </div>
+                            <div class="col-xs-9">
+                                <select class="form-control" ng-model="user.role" ng-options="opt.key as opt.value for opt in roleItems" required>
+                                    <option value="">请选择</option>
+                                </select>
+                            </div>
+                        </div>
+
+                        <div class="row wrapper-xs" ng-show="user.role=='MANAGER'">
+                            <div class="col-xs-3 text-right">
+                                <span class="bold">管理的图书馆</span>
+                            </div>
+                            <div class="col-xs-9">
+                                <select class="form-control" ng-model="user.library_id" ng-options="opt.key as opt.value for opt in libraryItems" required>
+                                    <option value="">请选择</option>
+                                </select>
+                            </div>
+                        </div>
+
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+</div>
+
+<script type="text/javascript">
+    app.controller('UserEditController', ['$scope', 'HttpService', '$stateParams', '$state', 'SweetAlert', 'toaster', 'cfpLoadingBar', 'FileUploader',
+        function ($scope, HttpService, $stateParams, $state, SweetAlert, toaster, cfpLoadingBar, FileUploader) {
+
+            var userId = $stateParams.userId;
+
+            $scope.roleItems = [{key:"ADMIN",value:"超级管理员"},{key:"MANAGER",value:"管理员"},{key:"USER",value:"普通用户"}];
+            $scope.libraryItems = [];
+
+            $scope.refreshLibrary=function(){
+                var url=$scope.app.host + '/library/page';
+                var params = {};
+                params["status"] = "OK";
+                HttpService.post(url,params).then(
+                        function(response){
+                            $scope.librarys = response.pager.libraries;
+                            //初始化图书馆
+                            for (var i = 0;i<$scope.librarys.length;i++){
+                                $scope.libraryItems[i] = {
+                                    key:$scope.librarys[i]['id'],
+                                    value:$scope.librarys[i]['name']
+                                }
+                            }
+                        }
+                )
+            };
+
+            $scope.refreshLibrary();
+
+            $scope.refreshUser = function (){
+                var url = $scope.app.host + "/user/profile";
+                console.log(url);
+                var params = {};
+                params['id'] = userId;
+                HttpService.post(url, params).then(
+                        function (response) {
+                            $scope.user = response.user;
+                        }
+                )
+            };
+
+            $scope.refreshUser();
+
+            $scope.submit = function () {
+                var url = $scope.app.host + "/user/access";
+                var params = $scope.user;
+                HttpService.post(url, params).then(
+                        function (response) {
+                            toaster.pop("success", '成功', '用户权限修改成功！');
+                            $state.go("app.user.list");
+                        }
+                )
+            };
+
+        }]);
+</script>
